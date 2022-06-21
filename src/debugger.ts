@@ -111,9 +111,13 @@ export class Debugger implements vscode.Disposable {
                     externalConsole: false, // @see https://github.com/xmake-io/xmake-vscode/issues/36
                     MIMode: "gdb",
                     miDebuggerPath: await this.findGdbPath(),
-                    description: "Enable pretty-printing for gdb",
-                    text: "-enable-pretty-printing",
-                    ignoreFailures: true
+                    setupCommands: [
+                        {
+                            description: "Enable pretty-printing for gdb",
+                            text: "-enable-pretty-printing",
+                            ignoreFailures: true
+                        }
+                    ]
                 };
             } else if (os.platform() == "win32" && plat == "mingw") {
                 debugConfig = {
@@ -152,7 +156,7 @@ export class Debugger implements vscode.Disposable {
             }
 
         }
-
+        // 从customDebugConfig获取额外的参数
         var customcfg = config.customDebugConfig;
         for (let key in customcfg) {
             debugConfig[key] = customcfg[key];
